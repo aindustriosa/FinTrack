@@ -13,6 +13,24 @@ Baliza de telemetria para vehículos radiocontrol
 - **CON:** Conectores [XT60](https://www.ebay.es/itm/2PCS-of-XT60-Battery-Male-Connector-Female-Plug-with-Silicon-14-AWG-Wire/311835523055?hash=item489ad877ef:g:GfAAAOSwB-1Y28Un:rk:3:pf:0) 
 - **PCB:** PCB de 50x70 mm [PCB](https://www.ebay.es/itm/5PCS-Double-Side-Prototype-PCB-Tinned-Universal-Breadboard-5x7-cm-50mmx70mm-FR4/200932697658?hash=item2ec885a63a:g:e2wAAOSw4apbRrru:rk:2:pf:0)
 
+## Diseño conceptual
+![Diseño de bloques](FinTrackLegacyDesing.png)
+
+El sistema esta compuesto de un arduino Nano al que se le han acoplado los sensores a sus diferentes puertos.
+
+
+
+## Diagrama KiCad
+
+## Montaje
+
+
+## Firmware
+
+### programación
+
+## Formato de datos de salida
+
 ## ROADMAP
 - [X] Descripcion de componentes
 - [ ] Circuito Kicad
