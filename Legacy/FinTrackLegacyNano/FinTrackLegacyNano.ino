@@ -84,7 +84,6 @@ uint8_t counter_log = 8; //cuando se activa el log (8=1 segundo)
 
 /// NMEA TelemetryGPS
 struct telemetrygps_t {
-    uint32_t timestamp;
     
     int32_t  latitudeL;
     int32_t  longitudeL;
@@ -101,21 +100,20 @@ struct telemetrygps_t {
     int8_t second;
     
     void init() {
-        timestamp = 0;
         latitudeL = -500;
         longitudeL = -500;
-        altitudeL=0;
+        altitudeL=-500;
 
-        lat_err_cm=0;
-        lon_err_cm=0;
-        alt_err_cm=0;
+        lat_err_cm=32000;
+        lon_err_cm=32000;
+        alt_err_cm=32000;
         
-        year = 0;
-        month= 0;
-        day= 0;
-        hour= 0;
-        minute= 0;
-        second= 0;
+        year = -1;
+        month= -1;
+        day= -1;
+        hour= -1;
+        minute= -1;
+        second= -1;
     }
 };
 telemetrygps_t gps_now ; //los datos adquiridos en la trasmision
@@ -210,13 +208,17 @@ void loop() {
     if (timeNow<timerStore){//se produce desvordamiento de buffer del timer32 (49dias); reseteo la refernecia base
         timerStore=0;
     }
+
+    
+    //compruebo que hay datos GPS nuevos y lo meto en le fix
+    get_data_gps();
     
     if((timeNow-timerStore)>=20){  // Main loop runs at 50Hz -> 20 milisec
        timerStore = timeNow; //pongo la nueva referencia
        cycleTimerCount++; //incremento el contador del shedeluer 
        
        // Do these things every 6th time through the main cycle 
-       // This section gets called every 1000/(20*6) = 8 1/3 Hz
+       // This section gets called every 1000/(20*5) = 10 Hz
        // doing it this way removes the need for another 'millis()' call
        // and balances the processing load across main loop cycles.
        switch (cycleTimerCount) {
@@ -229,24 +231,14 @@ void loop() {
              break;
                         
           case(2):
-              //compruebo que hay datos GPS nuevos y lo meto en le fix
-              if (gps.available( Serial )){
-                  fixGPS = gps.read();
-                  get_data_gps();
-              }
-            break;
-                        
-          case(3):
              get_data_power(); //8Hz
-             
              break;
                 
-          case(4): //8Hz
+          case(3): //8Hz
              get_data_imu();
-             
               break;
                         
-          case(5):
+          case(4):
               //[LOG]: Prepare
               if (counter_log == 1){
                  if (use_log){
@@ -259,13 +251,12 @@ void loop() {
                       dataFile.sync();
                       //Serial.println(sd_buffer);
                   }
-                  counter_log = 8;
+                  counter_log = 9;
                  
              }else{
                  counter_log--;    
              }
 
-             
             cycleTimerCount = -1; // Reset case counter, will be incremented to zero before switch statement
             break;
         }
@@ -277,16 +268,26 @@ void loop() {
     
 //FUNCIOES DE DATOS:
 void get_data_gps(void){
-  
-    if (fixGPS.valid.location && fixGPS.valid.time) {
+
+  if (gps.available( Serial )){
+    fixGPS = gps.read();
+    
+    if (fixGPS.valid.location) {
         gps_now.latitudeL=fixGPS.latitudeL();
         gps_now.longitudeL=fixGPS.longitudeL();
+    }
+
+    if (fixGPS.valid.altitude){
         gps_now.altitudeL=fixGPS.altitude_cm();
-        
+    }
+    
+    if (fixGPS.valid.lon_err){
         gps_now.lat_err_cm = fixGPS.lat_err_cm;
         gps_now.lon_err_cm = fixGPS.lon_err_cm;
         gps_now.alt_err_cm = fixGPS.alt_err_cm;
+    }
         
+    if(fixGPS.valid.time){
         gps_now.year=fixGPS.dateTime.year;
         gps_now.month=fixGPS.dateTime.month;
         gps_now.day=fixGPS.dateTime.date;
@@ -294,6 +295,7 @@ void get_data_gps(void){
         gps_now.minute=fixGPS.dateTime.minutes;
         gps_now.second=fixGPS.dateTime.seconds;
     }
+  }
     
 }
 
@@ -323,6 +325,8 @@ void get_data_power(void){
 ////////////////////////////////////////////////////////////////////////////////
 
 void clear_values(void){
+  
+  gps_now.init();
   //reset values:
   voltage.clear();
   current.clear();
@@ -459,6 +463,6 @@ void get_data_report(void){
     dataFile.print(magz.pop_stdev());
     dataFile.write('\r\n');
     
-    
     clear_values(); //limpio los buffers
+    
 }
