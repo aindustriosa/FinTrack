@@ -45,23 +45,18 @@ Se integra con el vehículo radiocontrol "pinchándose" en medio de la alimentac
 ## Firmware
 
 ### Requerimientos
-El firmware require de las siguentes librerias para compilar:
-Arduino
-SPI
-SdFat
-NeoGPS
-GY91_I2C
+El firmware require de las siguentes librerias para compilar: Arduino, SPI, SdFat, NeoGPS, GY91_I2C
 
 Estas librerías estan incluidas en el repositorio.
 
 ### programación
 Seleccionar:
-Placa "Arduino Pro or Pro Mini"
-Procesador: ATMega328P (16Mhz, 5v)
-Programador: AVRISP mkII
+- Placa "Arduino Pro or Pro Mini"
+- Procesador: ATMega328P (16Mhz, 5v)
+- Programador: AVRISP mkII
 
 ### Configuración del GPS
-Actualmente se utiliza un GPS M8N de la marca Ublox. Este requiere de una configuración para funcionar con el firmware. Se ha de subir por medio de la aplicacion [U-Center](../../tools/u-center_v8.29.exe)   el siguente archivo: [Config_M8N](UbloxM8N__rmc_gga_gst_2hz.txt)
+Actualmente se utiliza un GPS M8N de la marca Ublox. Este requiere de una configuración para funcionar con el firmware. Se ha de subir por medio de la aplicacion [U-Center](../tools/u-center_v8.29.exe)   el siguente archivo: [Config_M8N](UbloxM8N__rmc_gga_gst_2hz.txt)
 Si por alguna razon, este GPS no pudiese ser el mismo modelo, hay que configurarlo como:
 - protocolo NMEA
 - Frecuencia 2Hz (500ms)
@@ -76,6 +71,47 @@ Cabezera identificativa de las tramas:
 ```
 ID,timestamp_ms,year,month,day,hour,min,sec,lat_E7,lon_E7,alt_cm,lat_err_cm,lon_err_cm,alt_err_cm,volt_avg,volt_std,amp_avg,amp_std,ldr_avg,ldr_std,pres_avg_hpa,pres_std,acx_avg,acx_std,acy_avg,acy_std,acz_avg,acz_std,gyx_avg,gyx_std,gyy_avg,gyy_std,gyz_avg,gyz_std,mgx_avg,mgx_std,mgy_avg,mgy_std,mgz_avg,mgz_std
 ```
+La descripción de cada uno de estos valores es la siguente:
+- **ID:** El código identificativo de la trama
+- **timestamp_ms:** Los milisegundos desde que se enciende el dispositivo
+- **year:** El año, obtenido por el GPS (20-1 si no hay dato)
+- **month:** El mes, obtenido por el GPS (-1 si no hay dato)
+- **day:** El día, obtenido por el GPS (-1 si no hay dato)
+- **hour:** La hora, obtenido por el GPS (-1 si no hay dato)
+- **min:** El minuto, obtenido por el GPS (-1 si no hay dato)
+- **sec:** El segundo, obtenido por el GPS (-1 si no hay dato)
+- **lat_E7:** Latitud en formato grados decimales E-7 (428765432->42.8765432), obtenido por el GPS (-500 si no hay dato)
+- **lon_E7:** Longitud en formato grados decimales E-7 (88765432->8.8765432), obtenido por el GPS (-500 si no hay dato)
+- **alt_cm:** La altura sobre la hipotética esfera que simula la tierra. En centimetros. (-1 si no hay dato)
+- **lat_err_cm:**  El error en cm de la posición de la latitud (si no hay dato, 32000)
+- **lon_err_cm:** El error en cm de la posición de la longitud (si no hay dato, 32000)
+- **alt_err_cm:** El error en cm de la posición de la altura (si no hay dato, 32000)
+- **volt_avg:** El valor medio de las medidas tomadas durante un segundo de la entrada de voltaje. Medida absoluta
+- **volt_std:** La desviación estandar de las medidas de voltaje
+- **amp_avg:** El valor medio de las medidas tomadas durante un segundo de la entrada de corriente. Medida absoluta
+- **amp_std:** La desviación estandar de las medidas de corriente
+- **ldr_avg:** El valor medio de las medidas tomadas durante un segundo de la entrada de intensidad de luz. Medida absoluta
+- **ldr_std:** La desviación estandar de las medidas de intensidad luminosa
+- **pres_avg_hpa:** El valor medio de las medidas tomadas durante un segundo de la presión barométrica. Medida hPa.
+- **pres_std:** La desviación estandar de las medidas de presión barométrica
+- **acx_avg:** El valor medio de las medidas tomadas durante un segundo de la aceleración en el eje X. Medida absoluta.
+- **acx_std:** La desviación estandar de las medidas de aceleración en el eje X
+- **acy_avg:** El valor medio de las medidas tomadas durante un segundo de la aceleración en el eje Y. Medida absoluta.
+- **acy_std:** La desviación estandar de las medidas de aceleración en el eje Y
+- **acz_avg:** El valor medio de las medidas tomadas durante un segundo de la aceleración en el eje Z. Medida absoluta.
+- **acz_std:** La desviación estandar de las medidas de aceleración en el eje Z
+- **gyx_avg:** El valor medio de las medidas tomadas durante un segundo del giróscopo en el eje X. Medida absoluta.
+- **gyx_std:** La desviación estandar de las medidas de giróscopo en el eje X
+- **gyy_avg:** El valor medio de las medidas tomadas durante un segundo del giróscopo en el eje Y. Medida absoluta.
+- **gyy_std:** La desviación estandar de las medidas de giróscopo en el eje Y
+- **gyz_avg:** El valor medio de las medidas tomadas durante un segundo del giróscopo en el eje Z. Medida absoluta.
+- **gyz_std:** La desviación estandar de las medidas de giróscopo en el eje Z
+- **mgx_avg:** El valor medio de las medidas tomadas durante un segundo del magnetómetro en el eje X. Medida absoluta.
+- **mgx_std:** La desviación estandar de las medidas de magnetómetro en el eje X
+- **mgy_avg:**  El valor medio de las medidas tomadas durante un segundo del magnetómetro en el eje y. Medida absoluta.
+- **mgy_std:** La desviación estandar de las medidas de  magnetómetro en el eje Y
+- **mgz_avg:**  El valor medio de las medidas tomadas durante un segundo del magnetómetro en el eje Z. Medida absoluta.
+- **mgz_std:** La desviación estandar de las medidas de  magnetómetro en el eje Z
 
 Ejemplo de trama con datos nulos/falsos:
 ```
@@ -88,6 +124,36 @@ FTLN,700632,2019,2,26,15,1,59,422276422,-87514658,1150,790,240,500,0,0,512,0,480
 
 Se adjunta tambien un fichero completo de salida de los datos:
 [Fichero de ejemplo de salida](data_12.csv)
+
+## Tratamiento de datos
+Por un tema de calibración y exactitud de las medidas adquiridas, los datos guardados en la tarjeta SD son lo mas proximos a los valores RAW. 
+Con esto, mejoramos la capcidad del sistema para realizar todas las operaciones en la menor cantidad de tiempo, y no contaminamos las medidas adquiridas con calculos particulares que podrian estar erroneos sin una calibración de los instrumentos.
+
+Se requiere por tanto una trasfromación de los datos para obtener unos valores entendibles por el usuario.
+
+Para ello se puede utilizar un script python para la trasformación de los datos o una plantilla LibreOffice para la apliacion de las formulas de calibración.
+
+- Archivo Python
+- Hoja de Cálculo
+
+En la hoja de cálculo, tambien se incluyen las herramientas para generar los valores de las constantes necesarios para realizar las trasformaciones.
+
+
+### Conversion Voltaje
+
+### Conversión de corriente
+
+### Conversión de Intensidad Luminosa
+
+### Conversión de Acelerómetro
+
+### Conversión de Giróscopo
+
+### Conversión de Magnetómetro
+
+
+
+
 
 ## ROADMAP
 - [X] Descripción de componentes
