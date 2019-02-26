@@ -1,5 +1,5 @@
 # FinTrackLegacy
-Baliza de telemetria para vehículos radiocontrol
+Baliza de telemetría para vehículos radiocontrol
 
 ## Componentes
 
@@ -7,9 +7,9 @@ Baliza de telemetria para vehículos radiocontrol
 |:------------------:|:-----------:|:---------------:|:------:|
 | **MMU:**      |  Arduino Compatible Nano 5V Pro  Mini ATmega 328   | [TxHang](https://www.ebay.es/itm/5V-Pro-Mini-Atmega168-Module-16M-For-Arduino-Compatible-Nano-replace-Atmega328/401085596792?hash=item5d62908478:g:CosAAOSw1BlZVNWF:rk:34:pf:0)   |  1,6 €      |
 | **GPS:**        |   Ublox M8N          |                 |   15 €     |
-| **IMU:**        |   MPU9250 con sensor de presion BMP280 GY91          |  [TxHang](https://www.ebay.es/itm/MPU9250-BMP280-GY-91-10DOF-Acceleration-Gyroscope-Compass-Nine-Shaft-Sensor/201511414775?hash=item2eeb042bf7:g:GOAAAOSwiHpaRMU8:rk:2:pf:0)               |   4 €     |
+| **IMU:**        |   MPU9250 con sensor de presión BMP280 GY91          |  [TxHang](https://www.ebay.es/itm/MPU9250-BMP280-GY-91-10DOF-Acceleration-Gyroscope-Compass-Nine-Shaft-Sensor/201511414775?hash=item2eeb042bf7:g:GOAAAOSwiHpaRMU8:rk:2:pf:0)               |   4 €     |
 | **COMM:**      |  433MHz LoRa Device SX1278           |   [TxHang](https://www.ebay.es/itm/433MHz-LoRa-SX1278-long-range-RF-wireless-module-DRF1278F-For-Arduino/401241805025?hash=item5d6be010e1:g:xtsAAOSwcBRbztoL:rk:1:pf:0)              |   3,6 €     |
-| **VOLT:**        | Divisor de tension    |                 |   0,25 €     |
+| **VOLT:**        | Divisor de tensión    |                 |   0,25 €     |
 | **AMP:**        | Current Sensor Module 20A ACS712            |   [TxHang](https://www.ebay.es/itm/New-design-20A-range-Current-Sensor-Module-ACS712-Module-Arduino-module-ACS712T/181026550196?hash=item2a2605f1b4:g:lmwAAOSweXFb7S7H:rk:2:pf:0)              |    1,6 €    |
  **LUM:**        |   LDR con divisor de tensión          |                 |  0,5 €         |
 | **MEM:**      |   Socket Tarjeta MicroSD          |  [TxHang](https://www.ebay.es/itm/10PCS-TF-Micro-SD-Card-Module-Mini-SD-Card-Module-Memory-Module-Arduino-ARM-AVR/400995693568?hash=item5d5d34b400:g:WvIAAOSwsTxXiEqz:rk:1:pf:0)               |   0,5 €       |
@@ -22,11 +22,11 @@ Baliza de telemetria para vehículos radiocontrol
 ## Diseño conceptual
 ![Diseño de bloques](FinTrackLegacyDesing.png)
 
-El sistema esta compuesto de un arduino Nano al que se le han acoplado los sensores a sus diferentes puertos.
+El sistema está compuesto de un arduino Nano al que se le ha acoplado los sensores a sus diferentes puertos.
 
-Hay que señalar que es necesario colocar un regulador de tension para bajar de 5 voltios de la fuente a los 3.3 necesarios para el integrado LoRa.
+Hay que señalar que es necesario colocar un regulador de tensión para bajar de 5 voltios de la fuente a los 3.3 necesarios para el integrado LoRa.
 
-El sistema esta alimentado por una fuente de potencia de 5,4 voltios y consume unos 150 mA con un peso de unos 180gr
+El sistema esta alimentado por una fuente de potencia de 5,4 voltios y consume unos 150mA con un peso de unos 180gr
 
 
 
@@ -34,13 +34,13 @@ El sistema esta alimentado por una fuente de potencia de 5,4 voltios y consume u
 
 ## Montaje
 
-Se utiliza una placa de doble cara microperforada de paso 2,5 mm sobre la que se sueldan los diferentes componenetes.
+Se utiliza una placa de doble cara microperforada de paso 2,5 mm sobre la que se sueldan los diferentes componentes.
 
-Se intenta, en lo posible, separar los elementos de adquisición de los de emision y potencia, ya que estos podrian perturvar las lineas analógicas de las mediciones.
+Se intenta, en lo posible, separar los elementos de adquisición de los de emisión y potencia, ya que estos podrían perturbar las líneas analógicas de las mediciones.
 
 Se integra dentro de una caja estanca de 70x90.
 
-Se integra con el vehículo radiocontrol "pinchandose" en medio de la alimentacíon y la controladora. Por un lado se conecta un panel solar o batería principal y por el otro el sistema de control. De esta manera, el dispositivo monitoriza la energia consumida del vehículo.
+Se integra con el vehículo radiocontrol "pinchándose" en medio de la alimentación y la controladora. Por un lado se conecta un panel solar o batería principal y por el otro el sistema de control. De esta manera, el dispositivo monitoriza la energía consumida del vehículo.
 
 ## Firmware
 
@@ -67,8 +67,8 @@ Escribirá una linea por cada registro. Con la siguiente estructura: datos separ
 
 
 ## ROADMAP
-- [X] Descripcion de componentes
-- [ ] Circuito Kicad
+- [X] Descripción de componentes
+- [ ] Circuito KiCad
 - [ ] Circuito físico
 - [ ] Firmware
 - [ ] Software Cliente 
