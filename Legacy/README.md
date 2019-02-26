@@ -44,9 +44,27 @@ Se integra con el vehículo radiocontrol "pinchandose" en medio de la alimentac�
 
 ## Firmware
 
+### Requerimientos
+El firmware require de las siguentes librerias para compilar:
+Arduino
+SPI
+SdFat
+NeoGPS
+MPU9250
+
 ### programación
+Seleccionar:
+Placa "Arduino Pro or Pro Mini"
+Procesador: ATMega328P (16Mhz, 5v)
+Programador: AVRISP mkII
 
 ## Formato de datos de salida
+El formato de guardado de los datos sera un fichero en ASCII con extension .log
+Solo guardara los datos una vez que haya cogido posicion GPS, y el nombre del fichero sera la fecha actual.
+Escribirá una linea por cada registro. Con la siguiente estructura: datos separados por comas
+
+#FTRCK, ms_from_start, RSSI, gps_HDOP, gps_latitude, gps_longitude, gps_heading, bearing_avg, bearing_std, voltage_batt_avg, voltage_batt_std, amp_batt_avg, amp_batt_std, pressure_avg, pressure_std, ligth_avg, ligth_std,accX_avg, accX_std, accY_avg, accY_std, accZ_avg, accZ_std, gyrX_avg, gyrX_std, gyrY_avg, gyrY_std, gyrZ_avg, gyrZ_std, mgX_avg, mgX_std, mgY_avg, mgY_std, mgZ_avg, mgZ_std
+
 
 ## ROADMAP
 - [X] Descripcion de componentes
