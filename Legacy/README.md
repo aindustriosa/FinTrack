@@ -26,7 +26,7 @@ El sistema está compuesto de un arduino Nano al que se le ha acoplado los senso
 
 Hay que señalar que es necesario colocar un regulador de tensión para bajar de 5 voltios de la fuente a los 3.3 necesarios para el integrado LoRa.
 
-El sistema esta alimentado por una fuente de potencia de 5,4 voltios y consume unos 150mA con un peso de unos 180gr
+El sistema esta alimentado por una fuente de potencia de 5,4 voltios y consume unos 70mA (150mA si el LoRa esta activado) con un peso de unos 180gr
 
 
 
@@ -50,7 +50,9 @@ Arduino
 SPI
 SdFat
 NeoGPS
-MPU9250
+GY91_I2C
+
+Estas librerías estan incluidas en el repositorio.
 
 ### programación
 Seleccionar:
@@ -58,19 +60,40 @@ Placa "Arduino Pro or Pro Mini"
 Procesador: ATMega328P (16Mhz, 5v)
 Programador: AVRISP mkII
 
+### Configuración del GPS
+Actualmente se utiliza un GPS M8N de la marca Ublox. Este requiere de una configuración para funcionar con el firmware. Se ha de subir por medio de la aplicacion [U-Center](../../tools/u-center_v8.29.exe)   el siguente archivo: [Config_M8N](UbloxM8N__rmc_gga_gst_2hz.txt)
+Si por alguna razon, este GPS no pudiese ser el mismo modelo, hay que configurarlo como:
+- protocolo NMEA
+- Frecuencia 2Hz (500ms)
+- Tramas activas: GGA, RMC y GST
+
 ## Formato de datos de salida
-El formato de guardado de los datos sera un fichero en ASCII con extension .log
-Solo guardara los datos una vez que haya cogido posicion GPS, y el nombre del fichero sera la fecha actual.
+El formato de guardado de los datos sera un fichero en ASCII con extension .csv
+Guarda los datos con una frecuencia de 1 segundo. 
 Escribirá una linea por cada registro. Con la siguiente estructura: datos separados por comas
 
-#FTRCK, ms_from_start, RSSI, gps_HDOP, gps_latitude, gps_longitude, gps_heading, bearing_avg, bearing_std, voltage_batt_avg, voltage_batt_std, amp_batt_avg, amp_batt_std, pressure_avg, pressure_std, ligth_avg, ligth_std,accX_avg, accX_std, accY_avg, accY_std, accZ_avg, accZ_std, gyrX_avg, gyrX_std, gyrY_avg, gyrY_std, gyrZ_avg, gyrZ_std, mgX_avg, mgX_std, mgY_avg, mgY_std, mgZ_avg, mgZ_std
+Cabezera identificativa de las tramas:
+```
+ID,timestamp_ms,year,month,day,hour,min,sec,lat_E7,lon_E7,alt_cm,lat_err_cm,lon_err_cm,alt_err_cm,volt_avg,volt_std,amp_avg,amp_std,ldr_avg,ldr_std,pres_avg_hpa,pres_std,acx_avg,acx_std,acy_avg,acy_std,acz_avg,acz_std,gyx_avg,gyx_std,gyy_avg,gyy_std,gyz_avg,gyz_std,mgx_avg,mgx_std,mgy_avg,mgy_std,mgz_avg,mgz_std
+```
 
+Ejemplo de trama con datos nulos/falsos:
+```
+FTLN,2732,20-1,-1,-1,-1,-1,-1,-500,-500,-500,3008,3008,3008,0,0,511,0,553,0,1096,0,35,12,-188,17,-3969,31,-30,1,11,1,24,0,-179,5,319,7,-85,4
+```
+Ejemplo de trama con datos correctos:
+```
+FTLN,700632,2019,2,26,15,1,59,422276422,-87514658,1150,790,240,500,0,0,512,0,480,47,1096,0,-993,189,-2552,1332,-1786,1767,-1507,718,327,162,233,140,45,36,353,22,219,139
+```
+
+Se adjunta tambien un fichero completo de salida de los datos:
+[Fichero de ejemplo de salida](data_12.csv)
 
 ## ROADMAP
 - [X] Descripción de componentes
 - [ ] Circuito KiCad
 - [ ] Circuito físico
-- [ ] Firmware
+- [X] Firmware
 - [ ] Software Cliente 
 
 
