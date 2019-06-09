@@ -152,6 +152,7 @@ ecuacion lineal  y=m*x+b donde m=0,021402321537666 y b=2,17975609756098
 ![Grafica Voltaje](volt_ecuation.png)
 
 Se muestran a continuación una tabla comparativa de los resultados:
+
 | Valor RAW | Valor Real | Valor Teórico |
 |:------------------:|:--------------:|:--------------:|
 |772	| 18,7    | 18,866  |
@@ -180,6 +181,7 @@ ecuacion lineal  y=m*x+b donde m=0,048407687533938 y b= -24,7362605306027
 ![Grafica Corriente](amp_ecuation.png)
 
 Se muestran a continuación una tabla comparativa de los resultados:
+
 | Valor RAW | Valor Real | Valor Teórico |
 |:------------------:|:--------------:|:--------------:|
 |511| 0,041| -0,024 |
@@ -210,9 +212,11 @@ Adecuando el dato de la resistencia a 10 Lux, estimamos que esta sera aproximada
 
 La funcion, por tanto, quedaria asi:
 ecuacion potencial y=b*x^a donde m = -1,11111111111111 y  b= 1147988,18951353
+
 ![Grafica Lux](ldr_ecuation.png)
 
 Se muestran a continuación una tabla teorica resultante:
+
 | Valor RAW | Valor Real | 
 |:------------------:|:--------------:|
 |24| 33602,3285394608 |
@@ -230,19 +234,22 @@ Se muestran a continuación una tabla teorica resultante:
 La medida de aceleración es adquirida a traves del sensor MPU9250, el cual esta configurado a 8G, lo que nos da 4096 counts/g.
 
 Calculado la ecuacion correspondiente:
+
 ![Grafica Aceleración](acel_ecuation.png)
 
 ### Conversión de Giróscopo
 La medida de giroscopo es adquirida a traves del sensor MPU9250, el cual esta configurado a 250º/s, lo que nos da 131 counts/(º/s).
 
 Calculado la ecuacion correspondiente:
-![Grafica Giróscopo](giro_ecuation.png)
+
+![Grafica Giróscopo](gyro_ecuation.png)
 
 ### Conversión de Magnetómetro
 La medida de aceleración es adquirida a traves del sensor MPU9250, para el cual, senecesita realizar esta operaciónpara sacar los microTeslas:
 magScaleX = (((RAW) - 128)/(256) + 1) * 4912 / 32760
 
 Calculado la ecuacion correspondiente:
+
 ![Grafica Magnetómetro](mag_ecuation.png)
 
 
