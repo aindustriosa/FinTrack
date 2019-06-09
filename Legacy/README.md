@@ -171,7 +171,7 @@ Se muestran a continuación una tabla comparativa de los resultados:
 La adquisición de la corriente se hace por medio de un circuito integrado ACS712ELCTR-20A-T conectado en serie al polo positivo del panel solar. La salida de este divisor se introduce en el PIN  A6 del Arduino.
 Este circuito integrado teoricamente mide entre -20 y +20 amperios, en la franja de [0,5] voltios, por lo que serian unos 100mA/Volt. En la foto siguiente se puede apreciar el conexionado, entrando el polo positivo del panel solar por la parte izquierda y saliendo por la derecha hacia el ESC/Motor.
 
-![Foto conexionado sensor de corrinte](amp_conexion.png)
+![Foto conexionado sensor de corrinte](amp_conexion.jpg)
 
 Teoricamente la conversion de RAW a corriente seria:
 Corriente=((RAW*5/1023)-2,5)/0,1
