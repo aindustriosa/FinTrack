@@ -123,44 +123,149 @@ FTLN,700632,2019,2,26,15,1,59,422276422,-87514658,1150,790,240,500,0,0,512,0,480
 ```
 
 Se adjunta tambien un fichero completo de salida de los datos:
-[Fichero de ejemplo de salida](data_12.csv)
+[Fichero de ejemplo de salida](data_16.csv)
 
 ## Tratamiento de datos
 Por un tema de calibración y exactitud de las medidas adquiridas, los datos guardados en la tarjeta SD son lo mas proximos a los valores RAW. 
-Con esto, mejoramos la capcidad del sistema para realizar todas las operaciones en la menor cantidad de tiempo, y no contaminamos las medidas adquiridas con calculos particulares que podrian estar erroneos sin una calibración de los instrumentos.
+Con esto, mejoramos la capacidad del sistema para realizar todas las operaciones en la menor cantidad de tiempo, y no contaminamos las medidas adquiridas con calculos particulares que podrian estar erroneos sin una calibración de los instrumentos.
 
 Se requiere por tanto una trasfromación de los datos para obtener unos valores entendibles por el usuario.
 
 Para ello se puede utilizar un script python para la trasformación de los datos o una plantilla LibreOffice para la apliacion de las formulas de calibración.
 
 - Archivo Python
-- Hoja de Cálculo
+- Hoja de cálculo: [FinTrackLegacyData](FinTrackLegacyData.ods)
 
 En la hoja de cálculo, tambien se incluyen las herramientas para generar los valores de las constantes necesarios para realizar las trasformaciones.
 
 
 ### Conversion Voltaje
+La adquisición del voltaje se hace por medio de un divisor de tension conectado al polo positivo del panel solar y a su masa. La salida de este divisor se introduce en el PIN  A7 del Arduino.
+El divisor esta compuesto por dos resistencias de recision 1% R1:10 y R2:40K
+
+Teoricamente la conversion de RAW a voltaje seria:
+Voltaje=(RAW*5/1023)*(10+40)/10
+
+Se ha calibrado un tracker con datos reales y la funcion quedaria asi:
+ecuacion lineal  y=m*x+b donde m=0,021402321537666 y b=2,17975609756098
+
+![Grafica Voltaje](volt_ecuation.png)
+
+Se muestran a continuación una tabla comparativa de los resultados:
+| Valor RAW | Valor Real | Valor Teórico |
+|:------------------:|:--------------:|:--------------:|
+|772	| 18,7    | 18,866  |
+|791  | 19,16  |19,330  |
+|782  | 18,89  | 19,110  |
+|800  | 19,33  | 19,550  |
+|823  | 19,83  | 20,112  |
+|821  | 19,81  | 20,063  |
+|818  | 19,66  | 19,990  |
+|816  | 19,6  | 19,9413  |
+|815  | 19,58  | 19,916  |
+|813  | 19,55  | 19,868  |
+
 
 ### Conversión de corriente
+La adquisición de la corriente se hace por medio de un circuito integrado ACS712ELCTR-20A-T conectado en serie al polo positivo del panel solar. La salida de este divisor se introduce en el PIN  A6 del Arduino.
+Este circuito integrado teoricamente mide entre -20 y +20 amperios, en la franja de [0,5] voltios, por lo que serian unos 100mA/Volt. En la foto siguiente se puede apreciar el conexionado, entrando el polo positivo del panel solar por la parte izquierda y saliendo por la derecha hacia el ESC/Motor.
+
+![Foto conexionado sensor de corrinte](amp_conexion.png)
+
+Teoricamente la conversion de RAW a corriente seria:
+Corriente=((RAW*5/1023)-2,5)/0,1
+
+Se ha calibrado un tracker con datos reales y la funcion quedaria asi:
+ecuacion lineal  y=m*x+b donde m=0,048407687533938 y b= -24,7362605306027
+![Grafica Corriente](amp_ecuation.png)
+
+Se muestran a continuación una tabla comparativa de los resultados:
+| Valor RAW | Valor Real | Valor Teórico |
+|:------------------:|:--------------:|:--------------:|
+|511| 0,041| -0,024 |
+|515| 0,22 |0,171|
+|516| 0,263| 0,219|
+|531| 1| 0,953|
+|543| 1,5| 1,539|
+|553| 2| 2,028|
+|563| 2,5 | 2,517|
+|576| 3,2 | 3,152|
+|515| 0,08 | 0,171|
+
 
 ### Conversión de Intensidad Luminosa
+La adquisición de la intensidad luminosa se hace por medio de una resistencia fotoelectrica, LDR [GL5537], conectada a un divisor de tension. La salida de este divisor se introduce en el PIN  A2 del Arduino.
+El divisor esta compuesto por dos resistencias, una fija y la otra el LDR: R1:10 y R2:LDR
+
+Teoricamente la conversion de RAW a Lux seriauna ecuación logaritmica sacada del Datasheet del LDR:
+lux = 1.0+((log10(29.0)-log10(sensorValue * (5.0 / 1023.0)))/0.9)
+lux = pow(10.0, lux2) -> inversa de log10
+donde 29 es la resistencia a 10 lux [150K typical] , sacado del datasheet.
+
+Como en este caso no tenemos ningun aparato para poder calibrar el sensor, vamos a estimar el calculo de los Lux con la exposicion a un dia de luz solar a las 11:30 de la mañana. Teoricamente a plean luz del dia, los lux varian entre 100.000 y 30.000, asi que neustro sensor deberia estar en ese rango.
+
+Ademas, se probara que ante la aparaicion de nubes, este sensor responde con coherencia.
+
+Adecuando el dato de la resistencia a 10 Lux, estimamos que esta sera aproximadamente 175, para que nos de unos Lux coherentes a plena luz del dia.
+
+La funcion, por tanto, quedaria asi:
+ecuacion potencial y=b*x^a donde m = -1,11111111111111 y  b= 1147988,18951353
+![Grafica Lux](ldr_ecuation.png)
+
+Se muestran a continuación una tabla teorica resultante:
+| Valor RAW | Valor Real | 
+|:------------------:|:--------------:|
+|24| 33602,3285394608 |
+|40| 19048,9377703399 |
+|60| 12139,8636383701 |
+|90| 7736,7195449446 |
+|140| 4735,33505765633 |
+|162| 4026,4354145241 |
+|180| 3581,61649136152 |
+|206| 3083,0022514423 |
+|217| 2909,85299518942 |
+
 
 ### Conversión de Acelerómetro
+La medida de aceleración es adquirida a traves del sensor MPU9250, el cual esta configurado a 8G, lo que nos da 4096 counts/g.
+
+Calculado la ecuacion correspondiente:
+![Grafica Aceleración](acel_ecuation.png)
 
 ### Conversión de Giróscopo
+La medida de giroscopo es adquirida a traves del sensor MPU9250, el cual esta configurado a 250º/s, lo que nos da 131 counts/(º/s).
+
+Calculado la ecuacion correspondiente:
+![Grafica Giróscopo](giro_ecuation.png)
 
 ### Conversión de Magnetómetro
+La medida de aceleración es adquirida a traves del sensor MPU9250, para el cual, senecesita realizar esta operaciónpara sacar los microTeslas:
+magScaleX = (((RAW) - 128)/(256) + 1) * 4912 / 32760
+
+Calculado la ecuacion correspondiente:
+![Grafica Magnetómetro](mag_ecuation.png)
 
 
+## Visualización Web
+Se ha creado tambien un visualizador WEB para graficar los datos a traves de una plataforma interactiva.
 
+![Grafica Magnetómetro](unnamed.png)
 
+En este caso solo haria falta subir el fichero .csv generado por el Tracker y automaticamente se verian los datos en la WEB.
+
+## Firmware de Calibración
+Para calibrar el dispositivo Tracker, se ha creado un firmware especifico para habilitar la telemetria en tiempo real a traves del puerto serie.
+En este caso, se desabilita el GPS, y a traves de este conexionado (identico al que sirve para su programacion), se puede monitorizar los datos en tiempo real del Tracker.
+
+Solo es necesario, si se quiere realizar una calibracion exacta para cada dispositivo. Sino, con los datos proporcionados en el documento, seria suficiente.
 
 ## ROADMAP
 - [X] Descripción de componentes
 - [ ] Circuito KiCad
 - [ ] Circuito físico
 - [X] Firmware
-- [ ] Software Cliente 
+- [X] Software Cliente 
+- [X] Visor Web
 
 
 

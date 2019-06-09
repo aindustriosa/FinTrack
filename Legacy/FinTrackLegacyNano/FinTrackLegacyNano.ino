@@ -7,7 +7,6 @@
  * Sobre dispositivo ArduinoMini Pro (5v16Mhz) y Hardware de comunicacion RF430 SX1278 LoRa
  * GPS NMEA
  * IMU MPU6050
- * temperatura: 1x ds18b20
  * Luz: 1xLDR
  * Voltage: ADC interno
  * Amperios: ADC interno
