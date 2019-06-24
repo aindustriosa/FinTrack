@@ -1,6 +1,7 @@
 import { HttpClient, HttpEvent, HttpErrorResponse, HttpEventType } from  '@angular/common/http';
 import { map } from  'rxjs/operators';
 import { Injectable } from '@angular/core';
+import { stringify } from 'querystring';
 
 @Injectable({
   providedIn: 'root'
@@ -24,10 +25,11 @@ export class UploadService {
           const progress = Math.round(100 * event.loaded / event.total);
           return { status: 'progress', message: progress };
 
-        case HttpEventType.Response:
-          return event.body;
+          case HttpEventType.Response:
+              return event.body;
         default:
-          return `Unhandled event: ${event.type}`;
+          //return `Unhandled event: ${event.type}`;
+          return '';
       }
     })
     );
