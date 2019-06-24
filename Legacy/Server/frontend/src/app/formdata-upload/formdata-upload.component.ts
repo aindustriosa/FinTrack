@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { UploadService } from '../upload.service';
+import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-formdata-upload',
@@ -9,12 +10,14 @@ import { UploadService } from '../upload.service';
 })
 export class FormdataUploadComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder, private uploadService: UploadService) { }
+  SERVER_URL: string = "http://localhost:5000";
+
+  constructor(private formBuilder: FormBuilder, private http: HttpClient) { }
 
   form: FormGroup;
   error: string;
   userId: number = 1;
-  uploadResponse = { status: '', message: '' };
+  uploadResponse: string = '';
 
   ngOnInit() {
     this.form = this.formBuilder.group({
@@ -31,21 +34,19 @@ export class FormdataUploadComponent implements OnInit {
   }
 
   onSubmit() {
+    this.uploadResponse = '';
     const formData = new FormData();
 
     formData.append('vessel', this.form.get('vessel').value);
     formData.append('file', this.form.get('filename').value);
 
-    this.uploadService.upload(formData, this.userId).subscribe(
+    let uploadURL = `${this.SERVER_URL}/upload`;
+    this.http.post(uploadURL,formData).subscribe(
       (res) => {
-        this.uploadResponse = res;
-        if( res != '')
-        {
-          this.uploadResponse = { status: 'response', message: "Barco "+this.form.get('vessel').value+": "+res};
+          this.uploadResponse = "Barco "+this.form.get('vessel').value+": "+res;
           this.form.get('filename').setValue('');
           this.form.get('vessel').setValue('');
-        }
-      },
+        },
       (err) => this.error = err
     );
   }
