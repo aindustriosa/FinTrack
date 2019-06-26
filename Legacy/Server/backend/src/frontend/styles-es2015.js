@@ -557,7 +557,7 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\WorkingFolder\Regata\frontend\src\styles.css */"./src/styles.css");
+module.exports = __webpack_require__(/*! C:\WorkingFolder\Regata\FinTrack\Legacy\Server\frontend\src\styles.css */"./src/styles.css");
 
 
 /***/ })

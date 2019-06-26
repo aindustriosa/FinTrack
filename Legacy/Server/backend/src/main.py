@@ -1,11 +1,12 @@
- # Para ejecutar: flask run -h 0.0.0.0
+#!/usr/bin/python
+# Para ejecutar: flask run -h 0.0.0.0
  
- # coding=utf-8
+# coding=utf-8
 from flask import Flask, jsonify, request, render_template, send_from_directory
 from flask_cors import CORS, cross_origin
 import os
 import uuid
-#import loadcsv
+import loadcsv
 
 # creating the Flask application
 app = Flask(__name__, static_folder='frontend', static_url_path='', template_folder='frontend' )
@@ -28,6 +29,7 @@ def get_hola():
 @app.route("/upload", methods=["POST"])
 @cross_origin()
 def upload():
+    response = ""
 	# make a UUID based on the host ID and current time
     newguid = str(uuid.uuid1())
     print("UUID:",newguid)
@@ -57,6 +59,6 @@ def upload():
         print("Accept incoming file:", filename)
         print("Save it to:", destination)
         upload.save(destination)
-        #loadcsv.load(request.form.get('vessel'),destination,
+        response = loadcsv.load(request.form.get('vessel'),destination)
 
-    return jsonify('Uploaded file')
+    return jsonify(response + "\nFin de la carga del archivo.")

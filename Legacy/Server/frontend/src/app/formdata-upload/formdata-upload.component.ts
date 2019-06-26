@@ -41,12 +41,14 @@ export class FormdataUploadComponent implements OnInit {
     formData.append('file', this.form.get('filename').value);
 
     let uploadURL = `${this.SERVER_URL}/upload`;
-    this.http.post(uploadURL,formData).subscribe(
+    this.http.post(uploadURL, formData).subscribe(
       (res) => {
-          this.uploadResponse = "Barco "+this.form.get('vessel').value+": "+res;
-          this.form.get('filename').setValue('');
-          this.form.get('vessel').setValue('');
-        },
+        this.uploadResponse = "Barco " + this.form.get('vessel').value + ": \n";
+        this.uploadResponse += "----------------\n";
+        this.uploadResponse += res;
+        this.form.get('filename').setValue('');
+        this.form.get('vessel').setValue('');
+      },
       (err) => this.error = err
     );
   }
