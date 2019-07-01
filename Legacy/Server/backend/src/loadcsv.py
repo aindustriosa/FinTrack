@@ -1,112 +1,95 @@
 import csv
-import MySQLdb
 import random
 from datetime import datetime
+import MySQLdb
+import sys
 
-mydb = MySQLdb.connect(host='localhost',
-    user='fintrackuser',
-    passwd='<password>',
-    db='fintrackdb')
-cursor = mydb.cursor()
+def load(vessel,filename):
+    result=""
 
-csv_data = csv.reader(file('input.csv'))
+    mydb = MySQLdb.connect(host='localhost',
+        user='fintrackuser',
+        passwd='<password>',
+        db='fintrackdb')
+    cursor = mydb.cursor()
 
-name='Barco A';
+    if not filename:
+        return "Es necesario pasar como primer parametro el archivo a importar\n";
 
-firstline = True
-for row in csv_data:
-    if firstline:        #skip first line
-        firstline = False
-        continue
+    if not vessel:
+        return "Es necesario pasar como segundo parametro el nombre del barco\n";
 
-    cursor.execute('INSERT INTO dataraw (identifier,name,date,timestamp_ms,year,month,day,hour,min,sec,lat_E7,lon_E7,alt_cm,lat_err_cm,lon_err_cm,alt_err_cm,volt_avg,volt_std,amp_avg,amp_std,ldr_avg,ldr_std,pres_avg_hpa,pres_std,acx_avg,acx_std,acy_avg,acy_std,acz_avg,acz_std,gyx_avg,gyx_std,gyy_avg,gyy_std,gyz_avg,gyz_std,mgx_avg,mgx_std,mgy_avg,mgy_std,mgz_avg,mgz_std) VALUES ( \
-        %(identifier)s, \
-        %(name)s, \
-        %(date)s, \
-        %(timestamp_ms)s, \
-        %(year)s, \
-        %(month)s, \
-        %(day)s, \
-        %(hour)s, \
-        %(min)s, \
-        %(sec)s, \
-        %(lat_E7)s, \
-        %(lon_E7)s, \
-        %(alt_cm)s, \
-        %(lat_err_cm)s, \
-        %(lon_err_cm)s, \
-        %(alt_err_cm)s, \
-        %(volt_avg)s, \
-        %(volt_std)s, \
-        %(amp_avg)s, \
-        %(amp_std)s, \
-        %(ldr_avg)s, \
-        %(ldr_std)s, \
-        %(pres_avg_hpa)s, \
-        %(pres_std)s, \
-        %(acx_avg)s, \
-        %(acx_std)s, \
-        %(acy_avg)s, \
-        %(acy_std)s, \
-        %(acz_avg)s, \
-        %(acz_std)s, \
-        %(gyx_avg)s, \
-        %(gyx_std)s, \
-        %(gyy_avg)s, \
-        %(gyy_std)s, \
-        %(gyz_avg)s, \
-        %(gyz_std)s, \
-        %(mgx_avg)s, \
-        %(mgx_std)s, \
-        %(mgy_avg)s, \
-        %(mgy_std)s, \
-        %(mgz_avg)s, \
-        %(mgz_std)s)' ,
+    csv_data = csv.reader(open(filename))
 
-    {'identifier': row[0],
-        'name': name,
-        'date': datetime(int(row[2]), int(row[3]), int(row[4]), int(row[5]), int(row[6]), int(row[7])),
-        'timestamp_ms': int(row[1]),
-        'year': int(row[2]),
-        'month': int(row[3]),
-        'day': int(row[4]),
-        'hour': int(row[5]),
-        'min': int(row[6]),
-        'sec': int(row[7]),
-        'lat_E7': round(float(row[8])/10000000,6),
-        'lon_E7': round(float(row[9])/10000000,6),
-        'alt_cm': int(row[10]),
-        'lat_err_cm': int(row[11]),
-        'lon_err_cm': int(row[12]),
-        'alt_err_cm': int(row[13]),
-        'volt_avg': int(row[14])+random.randint(0, 100),
-        'volt_std': int(row[15]),
-        'amp_avg': int(row[16])+random.randint(0, 200),
-        'amp_std': int(row[17]),
-        'ldr_avg': int(row[18]),
-        'ldr_std': int(row[19]),
-        'pres_avg_hpa': int(row[20]),
-        'pres_std': int(row[21]),
-        'acx_avg': int(row[22]),
-        'acx_std': int(row[23]),
-        'acy_avg': int(row[24]),
-        'acy_std': int(row[25]),
-        'acz_avg': int(row[26]),
-        'acz_std': int(row[27]),
-        'gyx_avg': int(row[28]),
-        'gyx_std': int(row[29]),
-        'gyy_avg': int(row[30]),
-        'gyy_std': int(row[31]),
-        'gyz_avg': int(row[32]),
-        'gyz_std': int(row[33]),
-        'mgx_avg': int(row[34]),
-        'mgx_std': int(row[35]),
-        'mgy_avg': int(row[36]),
-        'mgy_std': int(row[37]),
-        'mgz_avg': int(row[38]),
-        'mgz_std': int(row[39])
-        });
+    name = vessel
 
-mydb.commit()
-cursor.close()
-print "Done"
+    firstline = True
+    i = 0
+    for row in csv_data:
+        if firstline:  # skip first line
+            firstline = False
+            continue
+
+        try:
+            voltaje = (int(row[14]) * 0.021402322) + 2.179756098
+            corriente = (int(row[16]) * 0.048407688) - 24.73626053
+            
+            cursor.execute('INSERT INTO data_SI (identifier,name,TimeStamp_ms,Fecha,Latitud,Longitud,Altura,Latitud_Err,'
+                        'Longitud_Err,Altura_Err,Voltaje,Voltaje_std,Corriente,Corriente_std,Luz,Luz_std,Presion,'
+                        'Presion_std,Potencia,Aceleracion_X,Aceleracion_X_std,Aceleracion_Y,Aceleracion_Y_std,'
+                        'Aceleracion_Z,Aceleracion_Z_std,Vel_Angular_X,Vel_Angular_X_std,Vel_Angular_Y,Vel_Angular_Y_std,'
+                        'Vel_Angular_Z,Vel_Angular_Z_std,Campo_Magnetico_X,Campo_Magnetico_X_std,Campo_Magnetico_Y,'
+                        'Campo_Magnetico_Y_std,Campo_Magnetico_Z,Campo_Magnetico_Z_std) VALUES (%(identifier)s, %(name)s, '
+                        '%(TimeStamp_ms)s, %(Fecha)s, %(Latitud)s, %(Longitud)s, %(Altura)s, %(Latitud_Err)s, '
+                        '%(Longitud_Err)s, %(Altura_Err)s, %(Voltaje)s, %(Voltaje_std)s, %(Corriente)s, %(Corriente_std)s, '
+                        '%(Luz)s, %(Luz_std)s, %(Presion)s, %(Presion_std)s, %(Potencia)s, %(Aceleracion_X)s, '
+                        '%(Aceleracion_X_std)s, %(Aceleracion_Y)s, %(Aceleracion_Y_std)s, %(Aceleracion_Z)s, '
+                        '%(Aceleracion_Z_std)s, %(Vel_Angular_X)s, %(Vel_Angular_X_std)s, %(Vel_Angular_Y)s, '
+                        '%(Vel_Angular_Y_std)s, %(Vel_Angular_Z)s, %(Vel_Angular_Z_std)s, %(Campo_Magnetico_X)s, '
+                        '%(Campo_Magnetico_X_std)s, %(Campo_Magnetico_Y)s, %(Campo_Magnetico_Y_std)s, '
+                        '%(Campo_Magnetico_Z)s, %(Campo_Magnetico_Z_std)s)',
+                        {'identifier': row[0],
+                            'name': name,
+                            'TimeStamp_ms': row[1],
+                            'Fecha': datetime(int(row[2]), int(row[3]), int(row[4]), int(row[5]), int(row[6]), int(row[7])),
+                            'Latitud': round(float(row[8])/10000000,6),
+                            'Longitud': round(float(row[9])/10000000,6),
+                            'Altura': row[10],
+                            'Latitud_Err': int(row[11])/100,
+                            'Longitud_Err': int(row[12])/100,
+                            'Altura_Err': int(row[13])/100,
+                            'Voltaje': voltaje,
+                            'Voltaje_std': row[15],
+                            'Corriente': corriente,
+                            'Corriente_std': row[17],
+                            'Luz': 1147988.19 * pow(int(row[18]), -1.111111111),
+                            'Luz_std': row[19],
+                            'Presion': row[20],
+                            'Presion_std': row[21],
+                            'Potencia': voltaje * corriente,
+                            'Aceleracion_X': (int(row[22]) * 0.000244141),
+                            'Aceleracion_X_std': row[23],
+                            'Aceleracion_Y': (int(row[24]) * 0.000244141),
+                            'Aceleracion_Y_std': row[25],
+                            'Aceleracion_Z': (int(row[26]) * 0.000244141),
+                            'Aceleracion_Z_std': row[27],
+                            'Vel_Angular_X': (int(row[28]) * 0.007633588) + 0.00000000000000203012,
+                            'Vel_Angular_X_std': row[29],
+                            'Vel_Angular_Y': (int(row[30]) * 0.007633588) + 0.00000000000000203012,
+                            'Vel_Angular_Y_std': row[31],
+                            'Vel_Angular_Z': (int(row[32]) * 0.007633588) + 0.00000000000000203012,
+                            'Vel_Angular_Z_std': row[33],
+                            'Campo_Magnetico_X': (int(row[34]) * 0.000585699) + 0.074969475,
+                            'Campo_Magnetico_X_std': row[35],
+                            'Campo_Magnetico_Y': (int(row[36]) * 0.000585699) + 0.074969475,
+                            'Campo_Magnetico_Y_std': row[37],
+                            'Campo_Magnetico_Z': (int(row[38]) * 0.000585699) + 0.074969475,
+                            'Campo_Magnetico_Z_std': row[39]})
+        except ValueError:
+            result+="Error al procesar los datos de la fila "+str(i)+"\n"
+        i += 1
+
+    mydb.commit()
+    cursor.close()
+    result+="Done\n"
+    return result
