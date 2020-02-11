@@ -16,6 +16,8 @@ La aplicación web Grafana se encargará de leer la información almacenada en l
 	sudo -H pip install --upgrade pip
 	sudo -H pip install pipdev
 	sudo pip install mysqlclient
+	sudo pip install flask
+	sudo pip install flask-cors
 
 ## Instalación de MySQL
 	sudo apt install mysql-server
@@ -48,57 +50,52 @@ La aplicación web Grafana se encargará de leer la información almacenada en l
 
 	use fintrackdb;
 
-	CREATE TABLE dataraw (
-		id integer NOT NULL AUTO_INCREMENT,
-	        identifier varchar(20),
-	        name varchar(50),
-	        date datetime,
-	        timestamp_ms integer,
-	        year integer,
-	        month integer,
-	        day integer,
-	        hour integer,
-	        min integer,
-	        sec integer,
-	        lat_E7 double precision,
-	        lon_E7 double precision,
-	        alt_cm integer,
-	        lat_err_cm integer,
-	        lon_err_cm integer,
-	        alt_err_cm integer,
-	        volt_avg integer,
-	        volt_std integer,
-	        amp_avg integer,
-	        amp_std integer,
-	        ldr_avg integer,
-	        ldr_std integer,
-	        pres_avg_hpa integer,
-	        pres_std integer,
-	        acx_avg integer,
-	        acx_std integer,
-	        acy_avg integer,
-	        acy_std integer,
-	        acz_avg integer,
-	        acz_std integer,
-	        gyx_avg integer,
-	        gyx_std integer,
-	        gyy_avg integer,
-	        gyy_std integer,
-	        gyz_avg integer,
-	        gyz_std integer,
-	        mgx_avg integer,
-	        mgx_std integer,
-	        mgy_avg integer,
-	        mgy_std integer,
-	        mgz_avg integer,
-	        mgz_std integer,
-	        PRIMARY KEY (id)
+	CREATE TABLE data_SI (
+	id integer NOT NULL AUTO_INCREMENT,
+        identifier varchar(20),
+        name varchar(50),
+		TimeStamp_ms integer,
+		Fecha datetime,
+		Latitud double precision,
+		Longitud double precision,
+		Altura integer,
+		Latitud_Err double precision,
+		Longitud_Err double precision,
+		Altura_Err double precision,
+		Voltaje double precision,
+		Voltaje_std integer,
+		Corriente double precision,
+		Corriente_std integer,
+		Luz double precision,
+		Luz_std integer,
+		Presion integer,
+		Presion_std integer,
+		Potencia double precision,
+		Aceleracion_X double precision,
+		Aceleracion_X_std integer,
+		Aceleracion_Y double precision,
+		Aceleracion_Y_std integer,
+		Aceleracion_Z double precision,
+		Aceleracion_Z_std integer,
+		Vel_Angular_X double precision,
+		Vel_Angular_X_std integer,
+		Vel_Angular_Y double precision,
+		Vel_Angular_Y_std integer,
+		Vel_Angular_Z double precision,
+		Vel_Angular_Z_std integer,
+		Campo_Magnetico_X double precision,
+		Campo_Magnetico_X_std integer,
+		Campo_Magnetico_Y double precision,
+		Campo_Magnetico_Y_std integer,
+		Campo_Magnetico_Z double precision,
+		Campo_Magnetico_Z_std integer,
+        PRIMARY KEY (id)
 	);
 
 ## Roadmap
-- [ ] Terminar la web de subida de los archivos CSV
-- [ ] Enlazar la web de subida de archivos con el script en Python que parsea los datos y los inserta en la BD.
-- [ ] Modificar el script en Python para que, en vez de insertar los datos en crudo, haga un procesado tomando como referencia las formulas de la documentación.
-- [ ] Crear un usuario en grafana anónimo que solo permita visualizar los datos.
-- [ ] Añadir graficas para el resto de sensores en grafana.
+- [x] Terminar la web de subida de los archivos CSV
+- [x] Enlazar la web de subida de archivos con el script en Python que parsea los datos y los inserta en la BD.
+- [x] Modificar el script en Python para que, en vez de insertar los datos en crudo, haga un procesado tomando como referencia las formulas de la documentación.
+- [x] Crear un usuario en grafana anónimo que solo permita visualizar los datos.
+- [x] Añadir graficas para el resto de sensores en grafana.
 

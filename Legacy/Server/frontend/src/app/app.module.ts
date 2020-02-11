@@ -6,13 +6,13 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ProfileComponent } from './profile/profile.component';
+import { FormdataUploadComponent } from './formdata-upload/formdata-upload.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ProfileComponent
+    FormdataUploadComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,22 @@
+<h2>Carga de datos de telemetría de un barco</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div style="margin: 10px">
+    Nombre del barco: <input type="text" formControlName="vessel" required />
+  </div>
+  <div style="margin: 10px">
+    <input type="file" name="filename" (change)="onFileChange($event)" />
+  </div>
+  <button type="submit" style="margin: 10px">Upload</button>
+
+</form>
+<div style="margin: 20px">
+  <div *ngIf="error">
+    <p>{{ error.message }}</p>
+    <p>{{ error.error }}</p>
+  </div>
+  
+  <div *ngIf="uploadResponse.status !== ''">
+    <pre>{{uploadResponse}}</pre>
+  </div>
+</div>
