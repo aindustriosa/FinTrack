@@ -2,6 +2,13 @@ import csv
 import MySQLdb
 import random
 from datetime import datetime
+from raw2si import year_parse, month_parse, day_parse
+from raw2si import hour_parse, minute_parse, second_parse, array_to_datetime
+from raw2si import degE7_parse
+from raw2si import voltRaw_to_avg, voltRaw_to_std, ampRaw_to_avg, ampRaw_to_std
+from raw2si import ldrRaw_to_avg, ldrRaw_to_std, presRaw_to_avg, presRaw_to_std
+from raw2si import accRaw_to_avg, accRaw_to_std, gyrRaw_to_avg, gyrRaw_to_std
+from raw2si import magRaw_to_avg, magRaw_to_std
 
 mydb = MySQLdb.connect(host='localhost',
     user='fintrackuser',
@@ -65,46 +72,46 @@ for row in csv_data:
 
     {'identifier': row[0],
         'name': name,
-        'date': datetime(int(row[2]), int(row[3]), int(row[4]), int(row[5]), int(row[6]), int(row[7])),
+        'date': array_to_datetime(row[2], row[3], row[4],row[5],row[6],row[7]),
         'timestamp_ms': int(row[1]),
-        'year': int(row[2]),
-        'month': int(row[3]),
-        'day': int(row[4]),
-        'hour': int(row[5]),
-        'min': int(row[6]),
-        'sec': int(row[7]),
-        'lat_E7': round(float(row[8])/10000000,6),
-        'lon_E7': round(float(row[9])/10000000,6),
+        'year': year_parse(row[2]),
+        'month': month_parse(row[3]),
+        'day': day_parse(row[4]),
+        'hour': hour_parse(row[5]),
+        'min': minute_parse(row[6]),
+        'sec': second_parse(row[7]),
+        'lat_E7': degE7_parse(row[8]),
+        'lon_E7': degE7_parse(row[9]),
         'alt_cm': int(row[10]),
         'lat_err_cm': int(row[11]),
         'lon_err_cm': int(row[12]),
         'alt_err_cm': int(row[13]),
-        'volt_avg': int(row[14])+random.randint(0, 100),
-        'volt_std': int(row[15]),
-        'amp_avg': int(row[16])+random.randint(0, 200),
-        'amp_std': int(row[17]),
-        'ldr_avg': int(row[18]),
-        'ldr_std': int(row[19]),
-        'pres_avg_hpa': int(row[20]),
-        'pres_std': int(row[21]),
-        'acx_avg': int(row[22]),
-        'acx_std': int(row[23]),
-        'acy_avg': int(row[24]),
-        'acy_std': int(row[25]),
-        'acz_avg': int(row[26]),
-        'acz_std': int(row[27]),
-        'gyx_avg': int(row[28]),
-        'gyx_std': int(row[29]),
-        'gyy_avg': int(row[30]),
-        'gyy_std': int(row[31]),
-        'gyz_avg': int(row[32]),
-        'gyz_std': int(row[33]),
-        'mgx_avg': int(row[34]),
-        'mgx_std': int(row[35]),
-        'mgy_avg': int(row[36]),
-        'mgy_std': int(row[37]),
-        'mgz_avg': int(row[38]),
-        'mgz_std': int(row[39])
+        'volt_avg': voltRaw_to_avg(row[14]),
+        'volt_std': voltRaw_to_std(row[15],row[14]),
+        'amp_avg': ampRaw_to_avg(row[16]),
+        'amp_std': ampRaw_to_std(row[17],row[16]),
+        'ldr_avg': ldrRaw_to_avg(row[18]),
+        'ldr_std': ldrRaw_to_std(row[19],row[18]),
+        'pres_avg_hpa': presRaw_to_avg(row[20]),
+        'pres_std': presRaw_to_std(row[21],row[20]),
+        'acx_avg': accRaw_to_avg(row[22]),
+        'acx_std': accRaw_to_std(row[23],row[22]),
+        'acy_avg': accRaw_to_avg(row[24]),
+        'acy_std': accRaw_to_std(row[25],row[24]),
+        'acz_avg': accRaw_to_avg(row[26]),
+        'acz_std': accRaw_to_std(row[27],row[26]),
+        'gyx_avg': gyrRaw_to_avg(row[28]),
+        'gyx_std': gyrRaw_to_std(row[29],row[28]),
+        'gyy_avg': gyrRaw_to_avg(row[30]),
+        'gyy_std': gyrRaw_to_std(row[31],row[30]),
+        'gyz_avg': gyrRaw_to_avg(row[32]),
+        'gyz_std': gyrRaw_to_std(row[33],row[32]),
+        'mgx_avg': magRaw_to_avg(row[34]),
+        'mgx_std': magRaw_to_std(row[35],row[34]),
+        'mgy_avg': magRaw_to_avg(row[36]),
+        'mgy_std': magRaw_to_std(row[37],row[36]),
+        'mgz_avg': magRaw_to_avg(row[38]),
+        'mgz_std': magRaw_to_std(row[39],row[38])
         });
 
 mydb.commit()
